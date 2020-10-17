@@ -91,15 +91,29 @@ const fallingBox: Tile = {
   canFall: true
 }
 
-const key: Tile = {
+const key1: Tile = {
   type: TileType.KEY1,
   color: '#ffcc00',
   canReplace: true,
   canFall: false,
 }
 
-const lock: Tile = {
+const lock1: Tile = {
   type: TileType.LOCK1,
+  color: '#ffcc00',
+  canReplace: false,
+  canFall: false,
+}
+
+const key2: Tile = {
+  type: TileType.KEY2,
+  color: '#ffcc00',
+  canReplace: true,
+  canFall: false,
+}
+
+const lock2: Tile = {
+  type: TileType.LOCK2,
   color: '#ffcc00',
   canReplace: false,
   canFall: false,
@@ -109,12 +123,14 @@ class MapController {
 
   map: Tile[][];
   playerPoint: Point;
-  isKeyLock: boolean;
+  isKey1Lock: boolean;
+  isKey2Lock: boolean;
 
   constructor(map: Tile[][]) {
     this.map = map;
     this.playerPoint = this.findPlayerPoint();
-    this.isKeyLock = true;
+    this.isKey1Lock = true;
+    this.isKey2Lock = true;
   }
 
   movePlayer(target: Point) {
@@ -122,7 +138,10 @@ class MapController {
     const tileAtTarget = this.getTile(target);
     if (tileAtTarget.canReplace) {
       if (tileAtTarget.type === TileType.KEY1) {
-        this.isKeyLock = false;
+        this.isKey1Lock = false;
+      }
+      if (tileAtTarget.type === TileType.KEY2) {
+        this.isKey2Lock = false;
       }
       const sucess = this.setTile(target, player);
       if (sucess) {
@@ -201,7 +220,10 @@ class MapController {
   }
 
   unlock(current: Point) {
-    if (this.isKeyLock === false && this.getTile(current).type === TileType.LOCK1) {
+    if (this.isKey1Lock === false && this.getTile(current).type === TileType.LOCK1) {
+      this.remove(current);
+    }
+    if (this.isKey2Lock === false && this.getTile(current).type === TileType.LOCK2) {
       this.remove(current);
     }
   }
@@ -227,8 +249,8 @@ let map: Tile[][] = [
   [unbreakable, unbreakable,  unbreakable,  unbreakable,  unbreakable,  unbreakable,  unbreakable,  unbreakable],
   [unbreakable, player,       air,          flux,         flux,         unbreakable,  air,          unbreakable],
   [unbreakable, fallingStone, unbreakable,  fallingBox,   flux,         unbreakable,  air,          unbreakable],
-  [unbreakable, key,          fallingStone, flux,         flux,         unbreakable,  air,          unbreakable],
-  [unbreakable, fallingStone, flux,         flux,         flux,         lock,         air,          unbreakable],
+  [unbreakable, key1,         fallingStone, flux,         flux,         unbreakable,  air,          unbreakable],
+  [unbreakable, fallingStone, flux,         flux,         flux,         lock1,        air,          unbreakable],
   [unbreakable, unbreakable,  unbreakable,  unbreakable,  unbreakable,  unbreakable,  unbreakable,  unbreakable],
 ];
 
